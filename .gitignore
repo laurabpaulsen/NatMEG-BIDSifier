@@ -1,0 +1,26 @@
+# Local configuration
+.config/settings
+.connect_logs/
+.tunnel.*
+*.log
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.Python
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE
+.vscode/
+.idea/
+*.iml

@@ -1,0 +1,1 @@
+../shared/admin/scripts/localctl.sh
