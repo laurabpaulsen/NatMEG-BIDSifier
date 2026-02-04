@@ -1,6 +1,6 @@
 # Installation Guide for Administrators
 
-This guide explains how to set up the NatMEG-BIDSifier-user repository and distribute it to your users.
+This guide explains how to set up and distribute the NatMEG-BIDSifier user repository.
 
 ## For System Administrators
 
@@ -8,8 +8,8 @@ This guide explains how to set up the NatMEG-BIDSifier-user repository and distr
 
 1. **Create the user repository** (if not already done):
    ```bash
-   git clone git@github.com:k-CIR/NatMEG-BIDSifier-user.git
-   cd NatMEG-BIDSifier-user
+   git clone git@github.com:k-CIR/NatMEG-BIDSifier.git
+   cd NatMEG-BIDSifier
    ```
 
 2. **Share with users:**
@@ -18,7 +18,7 @@ This guide explains how to set up the NatMEG-BIDSifier-user repository and distr
    # Users clone directly from GitHub
    
    # Or via shared filesystem
-   cp -r NatMEG-BIDSifier-user /shared/applications/
+   cp -r NatMEG-BIDSifier /shared/applications/
    ```
 
 ### Option 2: Create a Wrapper Script
@@ -28,8 +28,8 @@ For completely hands-off setup, provide users with a single bootstrap script:
 **File: `download-natmeg.sh`**
 ```bash
 #!/bin/bash
-git clone git@github.com:k-CIR/NatMEG-BIDSifier-user.git
-cd NatMEG-BIDSifier-user
+git clone git@github.com:k-CIR/NatMEG-BIDSifier.git
+cd NatMEG-BIDSifier
 make setup
 make ui
 ```
@@ -56,12 +56,12 @@ module load natmeg-tunnel/1.0
 **Step 1: Get the Repository**
 ```bash
 # Option A: From GitHub
-git clone git@github.com:k-CIR/NatMEG-BIDSifier-user.git
-cd NatMEG-BIDSifier-user
+git clone git@github.com:k-CIR/NatMEG-BIDSifier.git
+cd NatMEG-BIDSifier
 
 # Option B: From shared location
-cp -r /path/to/NatMEG-BIDSifier-user .
-cd NatMEG-BIDSifier-user
+cp -r /path/to/NatMEG-BIDSifier .
+cd NatMEG-BIDSifier
 ```
 
 **Step 2: Initialize**
@@ -96,7 +96,7 @@ This pulls the latest from the admin repository automatically.
 
 1. Install in `/opt/` or `/usr/local/`:
    ```bash
-   sudo git clone git@github.com:k-CIR/NatMEG-BIDSifier-user.git /opt/natmeg-tunnel
+   sudo git clone git@github.com:k-CIR/NatMEG-BIDSifier.git /opt/natmeg-tunnel
    sudo chmod 777 /opt/natmeg-tunnel/.config
    ```
 
@@ -111,8 +111,8 @@ This pulls the latest from the admin repository automatically.
 Each user:
 ```bash
 cd ~/projects/
-git clone git@github.com:k-CIR/NatMEG-BIDSifier-user.git
-cd NatMEG-BIDSifier-user
+git clone git@github.com:k-CIR/NatMEG-BIDSifier.git
+cd NatMEG-BIDSifier
 make setup
 ```
 
@@ -121,14 +121,14 @@ make setup
 The submodule automatically tracks the admin repo's `main` branch.
 
 **For admin repo changes:**
-1. Update `scripts/localctl.sh` in the admin repo
+1. Update `scripts/localctl.sh` in the admin repo (NatMEG-BIDSifier-admin)
 2. Commit and push to GitHub
 3. Users run `make update` to get the latest
 
 **For bulk user updates:**
 ```bash
 # For each user machine
-cd NatMEG-BIDSifier-user
+cd NatMEG-BIDSifier
 git pull origin main
 git submodule update --remote
 ```
@@ -151,7 +151,7 @@ cp ../shared/admin/scripts/localctl.sh ./
 
 ### Users can't update to latest
 ```bash
-cd NatMEG-BIDSifier-user
+cd NatMEG-BIDSifier
 git pull origin main
 git submodule update --remote
 ```

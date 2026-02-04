@@ -5,7 +5,7 @@
 ```bash
 # 1. Clone and setup
 git clone <repo-url>
-cd NatMEG-BIDSifier-user
+cd NatMEG-BIDSifier
 make setup
 
 # 2. Launch (choose one)

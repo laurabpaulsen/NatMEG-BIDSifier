@@ -7,7 +7,7 @@ A user-friendly interface for managing remote NatMEG data processing servers.
 ### 1. Clone This Repository
 ```bash
 git clone <this-repo-url>
-cd NatMEG-BIDSifier-user
+cd NatMEG-BIDSifier
 ```
 
 ### 2. Run Setup (First Time Only)

@@ -95,14 +95,14 @@ make update
 ## 🔄 Synchronization Mechanism
 
 ### How It Works
-1. **Admin repo** (`NatMEG-BIDSifier`) has canonical `scripts/localctl.sh`
-2. **User repo** (`NatMEG-BIDSifier-user`) includes admin repo as git submodule
+1. **Admin repo** (`NatMEG-BIDSifier-admin`) has canonical `scripts/localctl.sh`
+2. **User repo** (`NatMEG-BIDSifier`) includes admin repo as git submodule
 3. **Symlink** in user repo points to submodule's `localctl.sh`
 4. **Users** run `make update` → pulls latest from admin repo
 
 ### Updates Flow
 ```
-Admin repo change
+Admin repo (NatMEG-BIDSifier-admin) change
        ↓
 User runs: make update
        ↓
@@ -117,15 +117,15 @@ Symlink automatically uses new version
 
 **Option 1: GitHub Clone**
 ```bash
-git clone git@github.com:k-CIR/NatMEG-BIDSifier-user.git
-cd NatMEG-BIDSifier-user
+git clone git@github.com:k-CIR/NatMEG-BIDSifier.git
+cd NatMEG-BIDSifier
 make setup
 ```
 
 **Option 2: Shared Directory**
 ```bash
 # Copy to shared location
-cp -r NatMEG-BIDSifier-user /shared/apps/natmeg-tunnel
+cp -r NatMEG-BIDSifier /shared/apps/natmeg-tunnel
 # Users: cd /shared/apps/natmeg-tunnel && make setup
 ```
 
@@ -137,7 +137,7 @@ docker run -it natmeg-tunnel make ui
 ### Maintaining Sync
 
 When you update `localctl.sh` in the admin repo:
-1. Commit and push to `k-CIR/NatMEG-BIDSifier`
+1. Commit and push to `k-CIR/NatMEG-BIDSifier-admin`
 2. Users automatically see it when running `make update`
 
 ## ✨ Why This Works Well
