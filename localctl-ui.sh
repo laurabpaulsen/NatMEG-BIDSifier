@@ -5,7 +5,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-LOCALCTL="$SCRIPT_DIR/localctl.sh"
+LOCALCTL="$SCRIPT_DIR/scripts/localctl.sh"
 
 # Color codes
 RED='\033[0;31m'
