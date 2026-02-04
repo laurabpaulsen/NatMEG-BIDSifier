@@ -30,14 +30,14 @@ show_menu() {
   echo
   echo -e "${BLUE}What would you like to do?${NC}"
   echo
-  echo "  1) ${GREEN}Start${NC}    - Launch remote server and create SSH tunnel"
-  echo "  2) ${YELLOW}Status${NC}   - Check tunnel and server status"
-  echo "  3) ${YELLOW}Stop${NC}     - Stop tunnel (optionally stop server)"
-  echo "  4) ${YELLOW}List${NC}     - List all running servers"
-  echo "  5) ${RED}Cleanup${NC}  - Stop a specific server by port"
-  echo "  6) ${RED}Cleanup All${NC} - Kill ALL your servers and clean up"
-  echo "  7) ${BLUE}Settings${NC} - Configure remote server"
-  echo "  0) ${RED}Exit${NC}"
+  echo -e "  1) ${GREEN}Start${NC}    - Launch remote server and create SSH tunnel"
+  echo -e "  2) ${YELLOW}Status${NC}   - Check tunnel and server status"
+  echo -e "  3) ${YELLOW}Stop${NC}     - Stop tunnel (optionally stop server)"
+  echo -e "  4) ${YELLOW}List${NC}     - List all running servers"
+  echo -e "  5) ${RED}Cleanup${NC}  - Stop a specific server by port"
+  echo -e "  6) ${RED}Cleanup All${NC} - Kill ALL your servers and clean up"
+  echo -e "  7) ${BLUE}Settings${NC} - Configure remote server"
+  echo -e "  0) ${RED}Exit${NC}"
   echo
 }
 
