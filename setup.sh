@@ -20,11 +20,11 @@ if [[ ! -d "$REPO_ROOT/.git" ]]; then
 fi
 
 # Add submodule if not already present
-if [[ ! -f "$REPO_ROOT/.gitmodules" ]] || ! grep -q "localctl.sh" "$REPO_ROOT/.gitmodules" 2>/dev/null; then
+if [[ ! -f "$REPO_ROOT/.gitmodules" ]] || ! grep -q "shared/admin" "$REPO_ROOT/.gitmodules" 2>/dev/null; then
   echo "Adding admin repo as submodule..."
   cd "$REPO_ROOT"
   
-  read -rp "Enter admin repo URL (e.g., git@github.com:k-CIR/NatMEG-BIDSifier.git): " admin_repo_url
+  read -rp "Enter admin repo URL (e.g., git@github.com:k-CIR/NatMEG-BIDSifier-admin.git): " admin_repo_url
   
   git submodule add "$admin_repo_url" shared/admin
   
@@ -35,11 +35,17 @@ if [[ ! -f "$REPO_ROOT/.gitmodules" ]] || ! grep -q "localctl.sh" "$REPO_ROOT/.g
   echo "✓ Submodule added and symlinked"
   echo
 else
-  echo "Updating submodule..."
-  cd "$REPO_ROOT"
-  git submodule update --init --recursive
-  echo "✓ Submodule up to date"
-  echo
+  # Submodule already configured, just ensure it's initialized
+  if [[ ! -d "$REPO_ROOT/shared/admin/.git" ]]; then
+    echo "Initializing submodule..."
+    cd "$REPO_ROOT"
+    git submodule update --init --recursive
+    echo "✓ Submodule initialized"
+    echo
+  else
+    echo "✓ Submodule already initialized"
+    echo
+  fi
 fi
 
 # Make scripts executable
