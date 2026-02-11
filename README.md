@@ -16,7 +16,17 @@ make ui              # Interactive menu (easiest)
 make start           # Direct start
 ```
 
-## Common Tasks
+## Use the application
+
+![The NatMEG-BIDSifier browser](pics/config.png)
+
+1. **Configuration**: Browse and load your configuration file or start from scratch
+2. **Analyse / Editor**: Check and edit mis-spelled task names, modify runs etc. and save to a conversion table
+3. **Execute**: Process the conversion table
+4. **View the results**
+
+
+## Common CL Tasks
 
 ```bash
 make ui              # Start interactive menu
