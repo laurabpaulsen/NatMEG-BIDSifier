@@ -2,126 +2,128 @@
 
 A user-friendly interface for managing remote NatMEG data processing servers.
 
-## Quick Start
+## 30-Second Quick Start
 
-### 1. Clone This Repository
 ```bash
+# 1. Clone and setup
 git clone <this-repo-url>
 cd NatMEG-BIDSifier
-```
-
-### 2. Run Setup (First Time Only)
-```bash
 make setup
+
+# 2. Launch
+make ui              # Interactive menu (easiest)
+# or
+make start           # Direct start
 ```
 
-This will:
-- Download the `localctl.sh` script from the admin repository
-- Configure your SSH connection
-- Set up your preferred remote server path
-- Verify your SSH connection works
+## Common Tasks
 
-### 3. Start Using It
-
-**Interactive Menu (Recommended for most users):**
 ```bash
-make ui
-```
-
-**Or use direct commands:**
-```bash
-make start       # Launch a tunnel to the remote server
-make status      # Check tunnel status
-make stop        # Stop the tunnel
-make list        # List running servers
-make cleanup-all # Kill all your servers
+make ui              # Start interactive menu
+make start           # Launch a tunnel to the remote server
+make stop            # Stop the tunnel
+make status          # Check tunnel and server status
+make list            # List all running servers
+make cleanup-all     # Kill all your servers (with confirmation)
+make update          # Get latest version
 ```
 
 ## Features
 
-### Start Tunnel
-Launches a remote server and creates an SSH tunnel to your local machine.
-- Auto-selects available ports
-- Opens browser automatically
-- Shows connection details
-
-### Check Status
-View current tunnel and remote server status at a glance.
-
-### Stop Tunnel
-Gracefully stops the SSH tunnel. Optionally stops the remote server too.
-
-### List Servers
-See all running servers and which ports they're using.
-
-### Cleanup Specific Server
-Stop a single server by port number.
-
-### Cleanup All
-**WARNING:** Kills all servers running under your user account.
-- Only affects your own processes
-- Admin's servers are protected
-- Cleans up local configuration files
+- **Easy Setup:** One-time configuration wizard
+- **Interactive Menu:** No command-line knowledge required
+- **Auto-Port Selection:** Detects available ports automatically
+- **Browser Integration:** Opens browser automatically when tunnel starts
+- **Safe Cleanup:** Only stops your own processes
+- **Auto-Updates:** Stays synchronized with latest version
+- **SSH Tunnel:** Secure connection to remote servers
 
 ## Configuration
 
-Settings are stored in `.config/settings`:
+Settings are stored in `.config/settings` (created during setup):
+
 ```bash
 SSH_TARGET="youruser@compute.example.com"
 REMOTE_REPO="/path/to/NatMEG-BIDSifier"
 LOCAL_PORT="8080"
 ```
 
-To reconfigure:
+To reconfigure: `make setup`
+
+## Installation for Administrators
+
+### Option 1: Direct GitHub Clone
 ```bash
+git clone git@github.com:k-CIR/NatMEG-BIDSifier.git
+cd NatMEG-BIDSifier
 make setup
 ```
 
-## Updating
-
-To get the latest version of `localctl.sh` from the admin repository:
+### Option 2: Share via Filesystem
 ```bash
-make update
+cp -r NatMEG-BIDSifier /shared/applications/
+# Users: cd /shared/applications/NatMEG-BIDSifier && make setup
+```
+
+### Multiple Users on Shared Machine
+```bash
+sudo git clone git@github.com:k-CIR/NatMEG-BIDSifier.git /opt/natmeg-tunnel
+sudo chmod 777 /opt/natmeg-tunnel/.config
+# Each user runs: make setup
+```
+
+## How It Works
+
+```
+┌─────────────────────────────────────────────────┐
+│ Your Local Machine                              │
+│ ┌────────────────────────────────────────────┐  │
+│ │ Browser: localhost:PORT                    │  │
+│ └────────────────────────────────────────────┘  │
+│           ↑                                      │
+│    SSH Tunnel (secure)                          │
+│           ↓                                      │
+└─────────────────────────────────────────────────┘
+                    ↓
+┌─────────────────────────────────────────────────┐
+│ Remote Server                                   │
+│ ┌────────────────────────────────────────────┐  │
+│ │ NatMEG Application                          │  │
+│ └────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────┘
 ```
 
 ## Troubleshooting
 
-### "SSH connection failed"
-- Check your SSH credentials
-- Verify the remote server is accessible
-- Run: `ssh youruser@your.server.com`
-
-### "Port already in use"
-- The script will auto-select another port
-- Or specify a different port in settings: `make setup`
-
-### "Permission denied when killing servers"
-- The script only kills your own servers
-- You cannot kill servers started by other users
-
-### "Tunnel timed out"
-- Remote server may be down
-- Check with admin: `make list`
+| Problem | Solution |
+|---------|----------|
+| SSH connection fails | Run `make setup` to reconfigure SSH details |
+| Port already in use | Script auto-selects another port |
+| Want to change server | Run `make setup` again |
+| Want latest version | Run `make update` |
+| Permission denied when killing servers | Script only stops your own processes |
+| Tunnel times out | Remote server may be down; contact admin |
 
 ## File Structure
 
 ```
-NatMEG-BIDSifier-user/
-├── localctl-ui.sh       # Interactive menu wrapper
-├── setup.sh             # Initial setup script
-├── Makefile             # Convenient command shortcuts
-├── README.md            # This file
+NatMEG-BIDSifier/
+├── localctl-ui.sh          # Interactive menu
+├── setup.sh                # Setup wizard
+├── Makefile                # Command shortcuts
+├── README.md               # This file
 ├── .config/
-│   └── settings         # Your configuration (created by setup)
-├── .gitignore           # Git exclusions
-└── scripts/
-    └── localctl.sh      # Synced from admin repo (symlinked)
+│   └── settings            # Your configuration (created by setup)
+├── scripts/
+│   └── localctl.sh         # Main control script (synced from admin)
+└── shared/
+    └── admin/              # Admin repo (synced automatically)
 ```
 
 ## Advanced Usage
 
 ### Using localctl.sh Directly
-For advanced users, you can use `localctl.sh` directly with more options:
+For advanced users:
 
 ```bash
 ./scripts/localctl.sh --help
@@ -129,12 +131,19 @@ For advanced users, you can use `localctl.sh` directly with more options:
 ./scripts/localctl.sh cleanup --all user@server /path/to/repo
 ```
 
+### Synchronization
+The tool automatically stays synchronized with the admin repository. Updates flow through:
+
+```
+Admin Repo → Git Submodule → Symlink → Your Environment
+                    (git pull and make update pulls latest)
+```
+
 ## Support
 
-For issues with:
-- **Tunnel connection:** Check your SSH configuration
-- **Remote server:** Contact your NatMEG administrator
-- **This tool:** Check the README or contact your admin
+- **Tunnel connection issues:** Check SSH configuration
+- **Remote server issues:** Contact your NatMEG administrator
+- **Tool issues:** Run `make help` or check documentation files in `.archive/`
 
 ## License
 

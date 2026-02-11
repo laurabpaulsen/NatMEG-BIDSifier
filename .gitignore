@@ -2,7 +2,10 @@
 .config/settings
 .connect_logs/
 *.log
+.archive
 .venv/
 __pycache__/
 *.pyc
 .DS_Store
+*mov
+*gif
