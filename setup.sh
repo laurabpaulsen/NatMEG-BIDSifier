@@ -59,14 +59,28 @@ mkdir -p "$REPO_ROOT/.config"
 echo "Initial Configuration"
 echo "===================="
 echo
-read -rp "SSH Target (user@host): " ssh_target
-read -rp "Remote Repository Path [/data/users/natmeg/scripts/NatMEG-BIDSifier]: " remote_repo
-remote_repo=${remote_repo:-/data/users/natmeg/scripts/NatMEG-BIDSifier}
+echo "Choose mode of operation:"
+echo "  1) Remote - Connect to a remote server via SSH tunnel"
+echo "  2) Local  - Run the app locally without SSH tunneling"
+echo
+read -rp "Select mode (1 or 2) [1]: " mode
+mode=${mode:-1}
+
 read -rp "Local Port [8080]: " local_port
 local_port=${local_port:-8080}
 
+ssh_target=""
+remote_repo=""
+
+if [[ "$mode" == "1" ]]; then
+  read -rp "SSH Target (user@host): " ssh_target
+  read -rp "Remote Repository Path [/data/users/natmeg/scripts/NatMEG-BIDSifier]: " remote_repo
+  remote_repo=${remote_repo:-/data/users/natmeg/scripts/NatMEG-BIDSifier}
+fi
+
 # Save configuration
 cat > "$REPO_ROOT/.config/settings" <<EOF
+MODE="$mode"
 SSH_TARGET="$ssh_target"
 REMOTE_REPO="$remote_repo"
 LOCAL_PORT="$local_port"
@@ -91,21 +105,28 @@ EOF
 echo "✓ .gitignore created"
 echo
 
-# Test SSH connection
-echo "Testing SSH connection..."
-if ssh -o ConnectTimeout=5 "$ssh_target" "echo '✓ SSH connection successful'" 2>/dev/null; then
-  echo
-else
-  echo "⚠ Warning: Could not connect to $ssh_target"
-  echo "Check your credentials and try again."
-  echo
+# Test SSH connection only if remote mode
+if [[ "$mode" == "1" ]]; then
+  echo "Testing SSH connection..."
+  if ssh -o ConnectTimeout=5 "$ssh_target" "echo '✓ SSH connection successful'" 2>/dev/null; then
+    echo
+  else
+    echo "⚠ Warning: Could not connect to $ssh_target"
+    echo "Check your credentials and try again."
+    echo
+  fi
 fi
 
 echo "Setup Complete!"
 echo "=============="
 echo
 echo "Next steps:"
-echo "  1. Start the tunnel:    ./localctl-ui.sh"
-echo "  2. Or use directly:     ./scripts/localctl.sh start"
+if [[ "$mode" == "1" ]]; then
+  echo "  1. Launch UI:           make ui"
+  echo "  2. Or direct start:     make start"
+else
+  echo "  1. Launch UI:           make ui"
+  echo "  2. Or direct start:     make local-start"
+fi
 echo
 echo "For more information, see README.md"

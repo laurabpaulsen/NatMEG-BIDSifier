@@ -1,6 +1,6 @@
 # NatMEG BIDSifier - User Edition
 
-A user-friendly interface for managing remote NatMEG data processing servers.
+A user-friendly interface for managing NatMEG data processing. Choose to run **locally** (no SSH required) or connect to a **remote server** via SSH tunnel.
 
 ## 30-Second Quick Start
 
@@ -10,11 +10,18 @@ git clone <this-repo-url>
 cd NatMEG-BIDSifier
 make setup
 
-# 2. Launch
-make ui              # Interactive menu (easiest)
-# or
-make start           # Direct start
+# 2. Choose your mode during setup:
+#    - Local: Run app directly on your machine (no SSH required)
+#    - Remote: Connect to remote server via SSH tunnel
+
+# 3. Launch - one command for both modes:
+make ui              # Interactive menu (auto-detects your mode)
 ```
+
+**Local mode will:**
+- Automatically install Python dependencies on first run
+- Start the NatMEG application on http://localhost:8080
+- Manage the app process (start/stop/status)
 
 ## Use the application
 
@@ -28,31 +35,53 @@ make start           # Direct start
 
 ## Common CL Tasks
 
+### Universal (Works for Both Modes)
 ```bash
-make ui              # Start interactive menu
+make ui              # Launch interactive menu (auto-detects your mode)
+make update          # Get latest version
+```
+
+### Local Mode (No SSH)
+```bash
+make local-start     # Initialize local mode
+make local-status    # Check if app is running
+make local-stop      # Stop local mode
+```
+
+### Remote Mode (SSH Tunnel)
+```bash
 make start           # Launch a tunnel to the remote server
 make stop            # Stop the tunnel
 make status          # Check tunnel and server status
 make list            # List all running servers
 make cleanup-all     # Kill all your servers (with confirmation)
-make update          # Get latest version
 ```
 
 ## Features
 
-- **Easy Setup:** One-time configuration wizard
+- **Two Modes:** 
+  - **Local:** Run the app directly on your machine (no SSH required)
+  - **Remote:** Connect to a remote server via SSH tunnel
+- **Easy Setup:** One-time configuration wizard asking for your mode preference
 - **Interactive Menu:** No command-line knowledge required
-- **Auto-Port Selection:** Detects available ports automatically
-- **Browser Integration:** Opens browser automatically when tunnel starts
-- **Safe Cleanup:** Only stops your own processes
+- **Auto-Port Selection:** Detects available ports automatically (remote mode)
+- **Browser Integration:** Opens browser automatically (remote mode)
+- **Safe Cleanup:** Only stops your own processes (remote mode)
 - **Auto-Updates:** Stays synchronized with latest version
-- **SSH Tunnel:** Secure connection to remote servers
 
 ## Configuration
 
-Settings are stored in `.config/settings` (created during setup):
+Settings are stored in `.config/settings` (created during setup).
 
+### Local Mode
 ```bash
+MODE="2"
+LOCAL_PORT="8080"
+```
+
+### Remote Mode
+```bash
+MODE="1"
 SSH_TARGET="youruser@compute.example.com"
 REMOTE_REPO="/path/to/NatMEG-BIDSifier"
 LOCAL_PORT="8080"
@@ -84,6 +113,21 @@ sudo chmod 777 /opt/natmeg-tunnel/.config
 
 ## How It Works
 
+### Local Mode
+```
+Your Local Machine
+  ├─ NatMEG Application (managed by make local-start)
+  │  └─ FastAPI server on localhost:PORT
+  └─ Browser
+     └─ Accesses http://localhost:PORT
+```
+**How it works:**
+- `make local-start` starts the NatMEG FastAPI server from `shared/admin/server`
+- Dependencies installed automatically on first run (python -m pip install)
+- Access the app at http://localhost:8080 in your browser
+- Perfect for development, testing, or local data processing
+
+### Remote Mode
 ```
 ┌─────────────────────────────────────────────────┐
 │ Your Local Machine                              │
@@ -102,17 +146,33 @@ sudo chmod 777 /opt/natmeg-tunnel/.config
 │ └────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────┘
 ```
+Secure tunnel to a remote server. Requires SSH access and the app running on the remote host.
 
 ## Troubleshooting
 
+### Local Mode Issues
+| Problem | Solution |
+|---------|----------|
+| "Cannot connect to localhost:8080" | Run `make local-start` to start the app |
+| "No module named 'uvicorn'" | Dependencies will install on first `make local-start` |
+| "Permission denied" on dependencies | Automatic install uses `--break-system-packages` on macOS |
+| App crashes on startup | Check log: `tail .connect_logs/local/.app.log` |
+| Port 8080 already in use | Stop other services or use different port in setup |
+
+### Remote Mode Issues
 | Problem | Solution |
 |---------|----------|
 | SSH connection fails | Run `make setup` to reconfigure SSH details |
 | Port already in use | Script auto-selects another port |
 | Want to change server | Run `make setup` again |
-| Want latest version | Run `make update` |
 | Permission denied when killing servers | Script only stops your own processes |
 | Tunnel times out | Remote server may be down; contact admin |
+
+### General
+| Problem | Solution |
+|---------|----------|
+| Want latest version | Run `make update` |
+| Want to switch modes | Run `make setup` to reconfigure |
 
 ## File Structure
 
